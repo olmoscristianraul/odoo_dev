@@ -1,0 +1,40 @@
+#servicios para compartir entre las mismas versiones
+#base de datos, wdb, postgresweb.
+#debe ser unico el nombre, servicio, container_name
+#docker_network es red externa que se crea con el comando: docker network create nombreDeLaRed
+version: '3.1'
+services:
+  odoodb:
+    image: postgres
+    container_name: "docker_odoodb"
+    restart: always
+    networks:
+      - docker_network # Network desde el proxy
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=myodoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo_data-db:/var/lib/postgresql/data/pgdata
+      #- ./data_db:/var/lib/postgresql/data/pgdata
+
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: "docker_pgweb"
+    restart: always
+    depends_on:
+      - odoodb
+    networks:
+      - docker_network # Network desde el proxy
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_URL: postgres://odoo:myodoo@docker_odoodb:5432/postgres?sslmode=disable
+
+networks:
+  docker_network:
+    external: true
+
+volumes:
+  odoo_data-db:

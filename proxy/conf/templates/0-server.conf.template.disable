@@ -1,0 +1,22 @@
+#deshabilitado, solo se usa con ssl
+include /etc/letsencrypt/options-ssl-nginx.conf;
+ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+server {
+    listen [::]:80;
+    listen 80;
+    server_name mail.$DOMAIN webmail.$DOMAIN www.$DOMAIN $DOMAIN;
+    
+    # Strict Transport Security
+    add_header Strict-Transport-Security max-age=2592000;
+
+    location ~ /.well-known/acme-challenge {
+        allow all;
+        root /var/www/html;
+    }
+
+    # Redirect 301 to HTTPS
+    return 301 https://$host$request_uri;
+    #return 301 http://$host$request_uri;
+
+}

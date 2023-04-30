@@ -1,0 +1,20 @@
+# oca reports
+xlwt
+# oca partner contacts
+unicodecsv 
+unicode 
+# OCA knowledge
+python-magic 
+wheel
+urllib3
+pyOpenSSL
+httplib2>=0.7
+git+https://github.com/mcepl/M2Crypto
+git+https://github.com/pysimplesoap/pysimplesoap@e1453f385cee119bf8cfb53c763ef212652359f5
+git+https://github.com/OCA/openupgradelib@master
+git+https://github.com/ingadhoc/pyafipws@py3k
+git+https://github.com/adhoc-dev/aeroolib@master-fix-ods
+git+https://github.com/aeroo/currency2text
+# use this genshi version to fix error when, for eg, you send arguments like "date=True" check this https://genshi.edgewall.org/ticket/600
+git+https://github.com/edgewall/genshi@stable/0.7.x
+qrcode

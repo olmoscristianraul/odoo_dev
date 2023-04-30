@@ -1,0 +1,4 @@
+# m h  dom mon dow   command
+
+# Job cada 5 horas
+0 5  * * *  /home/hcsinergia/proxy/cron_job.sh

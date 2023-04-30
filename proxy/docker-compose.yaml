@@ -1,0 +1,38 @@
+version: "3"
+services:
+  nginx:
+    container_name: proxy_nginx
+    image: nginx:latest
+    restart: unless-stopped
+    environment:
+      - DOMAIN
+    networks:
+      - docker_network
+    ports:
+      - 80:80
+      #- 443:443 #descomentar si no estas en local y requiere certificado ssl
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./conf/templates:/etc/nginx/templates:ro
+      #- ./conf/letsencrypt:/etc/letsencrypt:ro #descomentar si no estas en local y requiere certificado ssl
+      #- ./conf/certbot/data:/var/www/certbot #descomentar si no estas en local y requiere certificado ssl
+      #- ../posteio/opt/www/.well-known:/var/www/html/.well-known #servidor de correo, no se requiere
+
+  #descomentar si no estas en local y requiere certificado ssl
+  #certbot:
+  #  container_name: proxy_certbot
+  #  image: certbot/certbot:latest
+  #  depends_on:
+  #    - nginx
+  #  command: >-
+  #           certonly --reinstall --webroot --webroot-path=/var/www/certbot
+  #           --email ${EMAIL} --agree-tos --no-eff-email
+  #           -d *.${DOMAIN} -d ${DOMAIN}
+  #           --preferred-challenges dns
+  #  volumes:
+  #    - ./conf/letsencrypt:/etc/letsencrypt
+  #    - ./conf/certbot/data:/var/www/certbot
+
+networks:
+  docker_network:
+    external: true

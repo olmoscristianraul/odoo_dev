@@ -1,0 +1,56 @@
+version: '3.1'
+services:
+  odoo:
+    build: 
+      context: ./bin
+      args:
+        ODOO_VERSION: "15.0"
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
+    container_name: "odoo_v15"
+    restart: always
+    networks:
+      - docker_network # Network desde el proxy
+    ports:
+      - "8069"
+      - "8072"
+    volumes:
+      - odoo_data-v15:/var/lib/odoo
+      - ./bin/config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      HOST: docker_odoodb
+      USER: odoo
+      PASSWORD: myodoo
+      WDB_SOCKET_SERVER: wdb_v15
+      WDB_NO_BROWSER_AUTO_OPEN: 1
+      WDB_WEB_SERVER: "cristian-dev"
+      WDB_WEB_PORT: "15984"
+    #command:
+    #  - odoo
+    #  - --limit-memory-soft=0
+    #  - --limit-time-real-cron=9999999
+    #  - --limit-time-real=9999999
+    #  - --workers=0
+    #  - --dev=reload,qweb,werkzeug,xml
+    #  - --log-level=debug
+
+  wdb:
+    image: kozea/wdb
+    container_name: "wdb_v15"
+    restart: always
+    depends_on:
+      - odoo
+    networks:
+      - docker_network # Network desde el proxy
+    ports:
+      - "15984:1984"
+    # HACK https://github.com/Kozea/wdb/issues/136
+    #init: true
+
+networks:
+  docker_network:
+    external: true
+
+volumes:
+  odoo_data-v15:
